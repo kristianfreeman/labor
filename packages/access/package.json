@@ -1,0 +1,11 @@
+{
+  "name": "@labor/access",
+  "version": "0.0.1",
+  "description": "Tools and middleware for working with Cloudflare Access inside of a Cloudflare Workers application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kristian Freeman <kristian@bytesized.xyz>",
+  "license": "ISC"
+}
