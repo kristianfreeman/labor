@@ -9,6 +9,7 @@
   "author": "Kristian Freeman <kristian@bytesized.xyz>",
   "license": "ISC",
   "dependencies": {
-    "cookie": "^0.4.0"
+    "cookie": "^0.4.0",
+    "jose": "^1.22.2"
   }
 }
