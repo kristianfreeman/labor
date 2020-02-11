@@ -1,11 +1,27 @@
-const DEFAULT_CONFIG = {};
+const DEFAULT_CONFIG = { debug: false };
 
-const AccessAuthorizer = (config = DEFAULT_CONFIG) => evt => {
-  if (evt.request.header["CF-Authorization"]) {
-    return { authorized: true, event: evt };
-  } else {
-    throw new Error("Unable to authorize");
+export default class AccessAuthorizer {
+  constructor(config = DEFAULT_CONFIG) {
+    this._config = config;
   }
-};
 
-export default config => AccessAuthorizer(config);
+  log(message) {
+    if (this._config.debug == true) {
+      console.log(`[ACCESS_AUTHORIZER]: ${message}`);
+    }
+  }
+
+  try(evt) {
+    this.log("Trying to run middleware");
+    this.log(JSON.stringify(evt));
+    return new Promise((resolve, reject) => {
+      if (evt.request.headers["CF-Authorization"]) {
+        this.log("Found header, resolving promise");
+        return resolve({ authorized: true, event: evt });
+      } else {
+        this.log("Unable to authorize, rejecting promise");
+        reject(new Error("Unable to authorize"));
+      }
+    });
+  }
+}
