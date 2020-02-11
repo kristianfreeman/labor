@@ -1,5 +1,5 @@
 import cookie from "cookie";
-import jose from "jose";
+import jose from "node-jose";
 
 const DEFAULT_CONFIG = { debug: false, verification: {} };
 
@@ -28,18 +28,23 @@ export default class AccessAuthorizer {
         if (!authCookie)
           throw new Error("CF_Authorization wasn't found in cookie");
 
-        this.log(`Found CF_Authorization cookie`);
+        this.log(`Found CF_Authorization: ${authCookie}`);
 
         const certificate_url = this._config.verification.certificateUrl;
         this.log(`Requesting certs from ${certificate_url}`);
         const resp = await fetch(certificate_url);
         const { keys } = await resp.json();
         this.log(`Requested verification keys, received ${keys.length}`);
-
         this.log(`Verifying...`);
-        const keyStore = jose.JWKS.asKeyStore(keys);
-        jose.JWT.verify(authCookie, keyStore);
-        return resolve({ authorized: true, event: evt });
+
+        const keyStore = await jose.JWK.asKeyStore(keys);
+        this.log(`Created key store: ${JSON.stringify(keyStore)}`);
+        let { payload } = await jose.JWS.createVerify(keyStore).verify(
+          authCookie
+        );
+        payload = jose.util.base64url.encode(payload);
+
+        return resolve({ authorized: true, event: evt, payload });
       } catch (err) {
         this.log("Unable to authorize, rejecting promise");
         reject(err);
