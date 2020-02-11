@@ -1,3 +1,5 @@
+import cookie from "cookie";
+
 const DEFAULT_CONFIG = { debug: false };
 
 export default class AccessAuthorizer {
@@ -15,7 +17,9 @@ export default class AccessAuthorizer {
     this.log("Trying to run middleware");
     this.log(JSON.stringify(evt));
     return new Promise((resolve, reject) => {
-      if (evt.request.headers["CF-Authorization"]) {
+      const cookiesHeader = evt.request.headers.get("Cookie") || "";
+      const cookies = cookie.parse(cookiesHeader);
+      if (cookies["CF_Authorization"]) {
         this.log("Found header, resolving promise");
         return resolve({ authorized: true, event: evt });
       } else {
