@@ -1,5 +1,3 @@
-import middleware from "@labor/middleware";
-
 const DEFAULT_CONFIG = {};
 
 const AccessAuthorizer = (config = DEFAULT_CONFIG) => evt => {
@@ -10,4 +8,4 @@ const AccessAuthorizer = (config = DEFAULT_CONFIG) => evt => {
   }
 };
 
-export default config => middleware(AccessAuthorizer(config));
+export default config => AccessAuthorizer(config);
