@@ -1,5 +1,5 @@
 {
-  "name": "@labor/access",
+  "name": "--sn---labor-access",
   "version": "0.0.1",
   "description": "Tools and middleware for working with Cloudflare Access inside of a Cloudflare Workers application",
   "main": "index.js",
